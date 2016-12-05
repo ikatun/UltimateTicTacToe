@@ -1,83 +1,20 @@
-/**
- * Sample React Native App
- * https://github.com/facebook/react-native
- * @flow
- */
-
 import React, { Component } from 'react';
-import { AppRegistry} from 'react-native';
-import BigBoard from './big-board';
-import { generateStartingState, advanceState, getNextPlayer, getSmallBoardWinner} from './game';
+import { AppRegistry, View, Button } from 'react-native';
+import UltimateTicTacToe from './ultimate-tic-tac-toe';
 
-/*
-const smallBoard = [
-  ['x', 'x', 'x'],
-  ['o', 'x', 'o'],
-  [{clickable: 'x'}, 'o', 'x']
-];
-const bigRow = [smallBoard, smallBoard, smallBoard];
-const bigBoard = [bigRow, bigRow, bigRow];
-*/
-
-function visualizeSmallBoard(smallBoard, currentPlayer, clickable) {
-  const winner = getSmallBoardWinner(smallBoard);
-  if (winner) {
-    return winner;
-  }
-
-  return smallBoard.map(row => row.map(field => {
-    if (field == 'x' || field == 'o') {
-      return field;
-    } else if (clickable) {
-      return {clickable: currentPlayer};
-    } else {
-      return 'unused';
-    }
-  }));
-
-
-}
-
-function convertStateToVisualBoard(state) {
-  const player = getNextPlayer(state.lastMove);
-  const lastX = state.lastMove.where[2];
-  const lastY = state.lastMove.where[3];
-  const unlockAll = getSmallBoardWinner(state.bigBoard[lastX][lastY]);
-
-  const visualBoard = state.bigBoard.map((bigRow, a) => bigRow.map((smallBoard, b) => {
-    const clickable = a === lastX && b === lastY || unlockAll;
-    return visualizeSmallBoard(smallBoard, player, clickable);
-  }));
-
-  const winner = getSmallBoardWinner(visualBoard);
-  if (winner === 'x' || winner === 'o') {
-    return winner;
-  }
-
-  return visualBoard;
-}
-
-export default class UltimateTicTacToe extends Component {
-  constructor(props) {
-    super(props);
-    const logicState = generateStartingState();
-    this.state = {
-      logic: logicState,
-      visual: convertStateToVisualBoard(logicState)
-    };
-  }
-
-  onPress(a, b, c, d) {
-    advanceState(this.state.logic, a, b, c, d);
-    this.state.visual = convertStateToVisualBoard(this.state.logic);
-    this.setState(this.state);
-  }
-
+class GameScene extends Component {
   render() {
     return (
-      <BigBoard rows={this.state.visual} onPress={(a, b, c, d) => this.onPress(a, b, c, d)}/>
+      <View style={{flex: 1}}>
+        <View style={{flex: 0.05}}>
+        </View>
+        <Button style={{flex: 0.1}} title="Reset" onPress={() => this.game.reset()} />
+        <View style={{flex: 0.85}}>
+          <UltimateTicTacToe ref={(game) => this.game = game}/>
+        </View>
+      </View>
     );
   }
 }
 
-AppRegistry.registerComponent('UltimateTicTacToe', () => UltimateTicTacToe);
+AppRegistry.registerComponent('UltimateTicTacToe', () => GameScene);
