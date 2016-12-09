@@ -1,0 +1,10 @@
+{
+  "apps": [
+    {
+      "serverURL": "http://ultimate-tic-tac-toe-service.herokuapp.com/parse",
+      "appId": "ultimate-tic-tac-toe",
+      "masterKey": "vHBqn7s3BuOvxylH8Sl1",
+      "appName": "MyApp"
+    }
+  ]
+}
